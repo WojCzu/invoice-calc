@@ -1,12 +1,12 @@
 .decoration {
-  position: absolute;
+  position: fixed;
   box-sizing: border-box;
   background: linear-gradient(
     rgba(159, 212, 6, 1) 0%,
     rgba(105, 239, 0, 1) 100%
   );
   border: 2px solid rgba(255, 255, 255, 0.5);
-
+  z-index: -1;
   &--square {
     width: clamp(500px, 70vw, 1500px);
     height: clamp(500px, 70vw, 1500px);

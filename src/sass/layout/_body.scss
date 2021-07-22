@@ -2,5 +2,7 @@ body {
   background-color: #1f2120;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
 }
