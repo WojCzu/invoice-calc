@@ -1,13 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice calculator</title>
+    <title>Invoice helper</title>
   </head>
   <body>
     <div class="decoration decoration--square"></div>
     <div class="decoration decoration--circle"></div>
+    <div class="app">
+      <h1 class="app__title">Invoice helper</h1>
+      <form class="app__form form">
+        <label class="form__label" for="amount">Kwota</label>
+        <input
+          class="form__input form__input--amount"
+          id="amount"
+          type="number"
+        />
+        <label class="form__label" for="date">Data</label>
+        <input class="form__input form__input--date" id="date" type="date" />
+        <label class="form__label" for="currency">Waluta</label>
+        <input
+          class="form__input form__input--currency"
+          id="currency"
+          type="text"
+        />
+        <button class="btn form__btn">oblicz</button>
+      </form>
+      <div class="app__result result">
+        <p class="result__message">This is placeholder result</p>
+      </div>
+    </div>
   </body>
 </html>
