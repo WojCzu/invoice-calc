@@ -1,0 +1,9 @@
+@use '../abstracts' as *;
+
+.input {
+  @include glass;
+  box-sizing: border-box;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 1.5em;
+}
