@@ -13,9 +13,7 @@ const handleSubmit = e => {
   const amount = amountInput.value;
   const date = dateInput.value;
   const currency = currencyInput.value;
-  getData(date, currency).then(data => console.log(data));
-  calculate(amount);
-  showResult();
+  getData(date, currency).then(data => showResult(amount, data));
 };
 const getData = (date, currency) => {
   const startingDate = new Date(date);
@@ -40,11 +38,26 @@ const getData = (date, currency) => {
 const previousDate = (date, days) => date.setDate(date.getDate() - days);
 const formatDate = date => date.toISOString().split("T")[0];
 
-const calculate = amount => {
-  return;
-};
-const showResult = () => {
-  return;
+const showResult = (amount, { code, table, date, exchangeRate }) => {
+  const convertedAmount = +(Number(amount) * Number(exchangeRate)).toFixed(4);
+  const fragment = document.createDocumentFragment();
+
+  const rateMessage = document.createElement("p");
+  rateMessage.innerText = `1 ${code} = ${exchangeRate} PLN`;
+
+  const tableMessage = document.createElement("p");
+  tableMessage.innerText = `TAB ${table} z dnia: ${date}`;
+
+  const exchangeRateMessage = document.createElement("p");
+  exchangeRateMessage.innerText = `${amount} ${code} = ${convertedAmount} PLN`;
+
+  [rateMessage, tableMessage, exchangeRateMessage].forEach(element => {
+    element.classList.add("result__message");
+    fragment.appendChild(element);
+  });
+
+  resultContainer.innerHTML = "";
+  resultContainer.appendChild(fragment);
 };
 
 appForm.addEventListener("submit", handleSubmit);
