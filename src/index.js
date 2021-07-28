@@ -59,13 +59,13 @@ const checkAmountErrors = amount => {
   let errors = false;
 
   if (!amount) {
-    addErrorMessage("wprowadź kwotę");
+    addMessage("wprowadź kwotę");
     errors = true;
   } else if (Number.isNaN(Number(amount))) {
-    addErrorMessage("kwota musi być liczbą");
+    addMessage("kwota musi być liczbą");
     errors = true;
   } else if (Number(amount) <= 0) {
-    addErrorMessage("kwota musi być większa od zera");
+    addMessage("kwota musi być większa od zera");
     errors = true;
   }
 
@@ -76,15 +76,15 @@ const checkDateErrors = date => {
   let errors = false;
 
   if (!date) {
-    addErrorMessage("wprowadź datę");
+    addMessage("wprowadź datę");
     errors = true;
   } else if (!date.match(/\d{4}-\d{2}-\d{2}/)) {
-    addErrorMessage("zły format daty - wprowadź: RRRR-MM-DD");
+    addMessage("zły format daty - wprowadź: RRRR-MM-DD");
     errors = true;
   } else if (
     new Date(date).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)
   ) {
-    addErrorMessage("data nie może być z przyszłości");
+    addMessage("data nie może być z przyszłości");
     errors = true;
   }
 
@@ -95,13 +95,13 @@ const checkCurrencyErrors = currency => {
   let errors = false;
 
   if (!currency) {
-    addErrorMessage("wprowadź walutę");
+    addMessage("wprowadź walutę");
     errors = true;
   } else if (!currency.match(/^\w{3}$/i)) {
-    addErrorMessage("zły format waluty - musi zawierać 3 znaki");
+    addMessage("zły format waluty - musi zawierać 3 znaki");
     errors = true;
   } else if (!possibleRates.includes(currency)) {
-    addErrorMessage(
+    addMessage(
       `nie znaleziono takiej waluty ${currency}, upewnij się, że jest poprawna`
     );
     errors = true;
@@ -124,36 +124,23 @@ const formatDate = date => date.toISOString().split("T")[0];
 
 const showError = error => {
   resultContainer.innerHTML = "";
-  addErrorMessage(`Wystąpił błąd: ${error}`);
+  addMessage(`Wystąpił błąd: ${error}`);
 };
 
-const addErrorMessage = message => {
-  const errorMessage = document.createElement("p");
-  errorMessage.classList.add("result__message");
-  errorMessage.innerText = message;
-  resultContainer.appendChild(errorMessage);
+const addMessage = messageText => {
+  const message = document.createElement("p");
+  message.classList.add("result__message");
+  message.innerText = messageText;
+  resultContainer.appendChild(message);
 };
 
 const showResult = (amount, { code, table, date, exchangeRate }) => {
   const convertedAmount = +(Number(amount) * Number(exchangeRate)).toFixed(4);
-  const fragment = document.createDocumentFragment();
-
-  const rateMessage = document.createElement("p");
-  rateMessage.innerText = `1 ${code} = ${exchangeRate} PLN`;
-
-  const tableMessage = document.createElement("p");
-  tableMessage.innerText = `TAB ${table} z dnia: ${date}`;
-
-  const exchangeRateMessage = document.createElement("p");
-  exchangeRateMessage.innerText = `${amount} ${code} = ${convertedAmount} PLN`;
-
-  [rateMessage, tableMessage, exchangeRateMessage].forEach(element => {
-    element.classList.add("result__message");
-    fragment.appendChild(element);
-  });
 
   resultContainer.innerHTML = "";
-  resultContainer.appendChild(fragment);
+  addMessage(`1 ${code} = ${exchangeRate} PLN`);
+  addMessage(`TAB ${table} z dnia: ${date}`);
+  addMessage(`${amount} ${code} = ${convertedAmount} PLN`);
 };
 
 fetch("http://api.nbp.pl/api/exchangerates/tables/a/")
