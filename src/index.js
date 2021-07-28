@@ -15,6 +15,7 @@ const handleSubmit = e => {
   const currency = currencyInput.value;
   getData(date, currency).then(data => showResult(amount, data));
 };
+
 const getData = (date, currency) => {
   const startingDate = new Date(date);
   const endingDate = new Date(date);
@@ -33,10 +34,19 @@ const getData = (date, currency) => {
         mid: exchangeRate,
       } = rates.sort(rate => rate.effectiveDate).reverse()[0];
       return { code, table, date, exchangeRate };
-    });
+    })
+    .catch(showError);
 };
 const previousDate = (date, days) => date.setDate(date.getDate() - days);
 const formatDate = date => date.toISOString().split("T")[0];
+
+const showError = error => {
+  const errorMessage = document.createElement("p");
+  errorMessage.classList.add("result__message");
+  errorMessage.innerText = `Wystąpił błąd: ${error}`;
+  resultContainer.innerHTML = "";
+  resultContainer.appendChild(errorMessage);
+};
 
 const showResult = (amount, { code, table, date, exchangeRate }) => {
   const convertedAmount = +(Number(amount) * Number(exchangeRate)).toFixed(4);
