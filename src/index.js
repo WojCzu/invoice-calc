@@ -8,11 +8,13 @@ const amountInput = appForm.querySelector(".form__input--amount");
 const dateInput = appForm.querySelector(".form__input--date");
 const currencyInput = appForm.querySelector(".form__input--currency");
 
+const possibleRates = [];
+
 const handleSubmit = e => {
   e.preventDefault();
   const amount = amountInput.value;
   const date = dateInput.value;
-  const currency = currencyInput.value;
+  const currency = currencyInput.value.toUpperCase();
 
   resultContainer.innerHTML = "";
 
@@ -22,11 +24,19 @@ const handleSubmit = e => {
   } else {
     amountInput.classList.remove("input__error");
   }
+
   if (checkDateErrors(date)) {
     dateInput.classList.add("input__error");
     return;
   } else {
     dateInput.classList.remove("input__error");
+  }
+
+  if (checkCurrencyErrors(currency)) {
+    currencyInput.classList.add("input__error");
+    return;
+  } else {
+    currencyInput.classList.remove("input__error");
   }
 
   const formatedAPIUrl = formatAPIUrl(date, currency);
@@ -81,6 +91,24 @@ const checkDateErrors = date => {
   return errors;
 };
 
+const checkCurrencyErrors = currency => {
+  let errors = false;
+
+  if (!currency) {
+    addErrorMessage("wprowadź walutę");
+    errors = true;
+  } else if (!currency.match(/^\w{3}$/i)) {
+    addErrorMessage("zły format waluty - musi zawierać 3 znaki");
+    errors = true;
+  } else if (!possibleRates.includes(currency)) {
+    addErrorMessage(
+      `nie znaleziono takiej waluty ${currency}, upewnij się, że jest poprawna`
+    );
+    errors = true;
+  }
+  return errors;
+};
+
 const formatAPIUrl = (date, currency) => {
   const startingDate = new Date(date);
   const endingDate = new Date(date);
@@ -128,4 +156,10 @@ const showResult = (amount, { code, table, date, exchangeRate }) => {
   resultContainer.appendChild(fragment);
 };
 
-appForm.addEventListener("submit", handleSubmit);
+fetch("http://api.nbp.pl/api/exchangerates/tables/a/")
+  .then(res => res.json())
+  .then(data =>
+    data[0].rates.forEach(rate => possibleRates.push(rate.code.toUpperCase()))
+  )
+  .then(appForm.addEventListener("submit", handleSubmit))
+  .catch(showError);
