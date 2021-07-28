@@ -13,19 +13,10 @@ const handleSubmit = e => {
   const amount = amountInput.value;
   const date = dateInput.value;
   const currency = currencyInput.value;
-  getData(date, currency).then(data => showResult(amount, data));
-};
 
-const getData = (date, currency) => {
-  const startingDate = new Date(date);
-  const endingDate = new Date(date);
-  previousDate(endingDate, 1);
-  previousDate(startingDate, 8);
-  const formatStartingDate = formatDate(startingDate);
-  const formatEndingDate = formatDate(endingDate);
-  const api = `${API_URL}/A/${currency}/${formatStartingDate}/${formatEndingDate}`;
+  const formatedAPIUrl = formatAPIUrl(date, currency);
 
-  return fetch(api)
+  fetch(formatedAPIUrl)
     .then(res => res.json())
     .then(({ code, rates }) => {
       const {
@@ -35,8 +26,20 @@ const getData = (date, currency) => {
       } = rates.sort(rate => rate.effectiveDate).reverse()[0];
       return { code, table, date, exchangeRate };
     })
+    .then(data => showResult(amount, data))
     .catch(showError);
 };
+
+const formatAPIUrl = (date, currency) => {
+  const startingDate = new Date(date);
+  const endingDate = new Date(date);
+  previousDate(endingDate, 1);
+  previousDate(startingDate, 8);
+  const formatStartingDate = formatDate(startingDate);
+  const formatEndingDate = formatDate(endingDate);
+  return `${API_URL}/A/${currency}/${formatStartingDate}/${formatEndingDate}`;
+};
+
 const previousDate = (date, days) => date.setDate(date.getDate() - days);
 const formatDate = date => date.toISOString().split("T")[0];
 
