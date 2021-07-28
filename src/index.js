@@ -14,6 +14,15 @@ const handleSubmit = e => {
   const date = dateInput.value;
   const currency = currencyInput.value;
 
+  resultContainer.innerHTML = "";
+
+  if (!checkAmount(amount)) {
+    amountInput.classList.add("input__error");
+    return;
+  } else {
+    amountInput.classList.remove("input__error");
+  }
+
   const formatedAPIUrl = formatAPIUrl(date, currency);
 
   fetch(formatedAPIUrl)
@@ -28,6 +37,32 @@ const handleSubmit = e => {
     })
     .then(data => showResult(amount, data))
     .catch(showError);
+};
+
+const checkAmount = amount => {
+  const errors = [];
+  if (!amount) {
+    const errorMessage = document.createElement("p");
+    errorMessage.classList.add("result__message");
+    errorMessage.innerText = "wprowadź kwotę";
+    resultContainer.appendChild(errorMessage);
+    errors.push(true);
+  }
+  if (Number.isNaN(Number(amount))) {
+    const errorMessage = document.createElement("p");
+    errorMessage.classList.add("result__message");
+    errorMessage.innerText = "kwota musi być liczbą";
+    resultContainer.appendChild(errorMessage);
+    errors.push(true);
+  }
+  if (Number(amount) <= 0) {
+    const errorMessage = document.createElement("p");
+    errorMessage.classList.add("result__message");
+    errorMessage.innerText = "kwota musi być większa od 0";
+    resultContainer.appendChild(errorMessage);
+    errors.push(true);
+  }
+  return errors.length === 0;
 };
 
 const formatAPIUrl = (date, currency) => {

@@ -4,4 +4,7 @@
   @include glass;
   box-sizing: border-box;
   padding: 0.5em 1em;
+  &__error {
+    background-color: rgba(241, 28, 28, 0.5);
+  }
 }
