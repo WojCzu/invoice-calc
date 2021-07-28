@@ -22,6 +22,12 @@ const handleSubmit = e => {
   } else {
     amountInput.classList.remove("input__error");
   }
+  if (checkDateErrors(date)) {
+    dateInput.classList.add("input__error");
+    return;
+  } else {
+    dateInput.classList.remove("input__error");
+  }
 
   const formatedAPIUrl = formatAPIUrl(date, currency);
 
@@ -50,6 +56,25 @@ const checkAmountErrors = amount => {
     errors = true;
   } else if (Number(amount) <= 0) {
     addErrorMessage("kwota musi być większa od zera");
+    errors = true;
+  }
+
+  return errors;
+};
+
+const checkDateErrors = date => {
+  let errors = false;
+
+  if (!date) {
+    addErrorMessage("wprowadź datę");
+    errors = true;
+  } else if (!date.match(/\d{4}-\d{2}-\d{2}/)) {
+    addErrorMessage("zły format daty - wprowadź: RRRR-MM-DD");
+    errors = true;
+  } else if (
+    new Date(date).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)
+  ) {
+    addErrorMessage("data nie może być z przyszłości");
     errors = true;
   }
 
