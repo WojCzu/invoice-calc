@@ -16,7 +16,7 @@ const handleSubmit = e => {
 
   resultContainer.innerHTML = "";
 
-  if (!checkAmount(amount)) {
+  if (checkAmountErrors(amount)) {
     amountInput.classList.add("input__error");
     return;
   } else {
@@ -39,30 +39,21 @@ const handleSubmit = e => {
     .catch(showError);
 };
 
-const checkAmount = amount => {
-  const errors = [];
+const checkAmountErrors = amount => {
+  let errors = false;
+
   if (!amount) {
-    const errorMessage = document.createElement("p");
-    errorMessage.classList.add("result__message");
-    errorMessage.innerText = "wprowadź kwotę";
-    resultContainer.appendChild(errorMessage);
-    errors.push(true);
+    addErrorMessage("wprowadź kwotę");
+    errors = true;
+  } else if (Number.isNaN(Number(amount))) {
+    addErrorMessage("kwota musi być liczbą");
+    errors = true;
+  } else if (Number(amount) <= 0) {
+    addErrorMessage("kwota musi być większa od zera");
+    errors = true;
   }
-  if (Number.isNaN(Number(amount))) {
-    const errorMessage = document.createElement("p");
-    errorMessage.classList.add("result__message");
-    errorMessage.innerText = "kwota musi być liczbą";
-    resultContainer.appendChild(errorMessage);
-    errors.push(true);
-  }
-  if (Number(amount) <= 0) {
-    const errorMessage = document.createElement("p");
-    errorMessage.classList.add("result__message");
-    errorMessage.innerText = "kwota musi być większa od 0";
-    resultContainer.appendChild(errorMessage);
-    errors.push(true);
-  }
-  return errors.length === 0;
+
+  return errors;
 };
 
 const formatAPIUrl = (date, currency) => {
@@ -79,10 +70,14 @@ const previousDate = (date, days) => date.setDate(date.getDate() - days);
 const formatDate = date => date.toISOString().split("T")[0];
 
 const showError = error => {
+  resultContainer.innerHTML = "";
+  addErrorMessage(`Wystąpił błąd: ${error}`);
+};
+
+const addErrorMessage = message => {
   const errorMessage = document.createElement("p");
   errorMessage.classList.add("result__message");
-  errorMessage.innerText = `Wystąpił błąd: ${error}`;
-  resultContainer.innerHTML = "";
+  errorMessage.innerText = message;
   resultContainer.appendChild(errorMessage);
 };
 
