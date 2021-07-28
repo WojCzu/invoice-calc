@@ -150,3 +150,5 @@ fetch("http://api.nbp.pl/api/exchangerates/tables/a/")
   )
   .then(appForm.addEventListener("submit", handleSubmit))
   .catch(showError);
+
+dateInput.setAttribute("max", formatDate(new Date()));
