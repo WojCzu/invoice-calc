@@ -18,26 +18,13 @@ const handleSubmit = e => {
 
   resultContainer.innerHTML = "";
 
-  if (checkAmountErrors(amount)) {
-    amountInput.classList.add("input__error");
-    return;
-  } else {
-    amountInput.classList.remove("input__error");
-  }
+  const invalidFields = [
+    { fn: checkAmountErrors, arg: amount, inp: amountInput },
+    { fn: checkDateErrors, arg: date, inp: dateInput },
+    { fn: checkCurrencyErrors, arg: currency, inp: currencyInput },
+  ].map(checkErrors);
 
-  if (checkDateErrors(date)) {
-    dateInput.classList.add("input__error");
-    return;
-  } else {
-    dateInput.classList.remove("input__error");
-  }
-
-  if (checkCurrencyErrors(currency)) {
-    currencyInput.classList.add("input__error");
-    return;
-  } else {
-    currencyInput.classList.remove("input__error");
-  }
+  if (invalidFields.includes(true)) return;
 
   const formatedAPIUrl = formatAPIUrl(date, currency);
 
@@ -107,6 +94,15 @@ const checkCurrencyErrors = currency => {
     errors = true;
   }
   return errors;
+};
+
+const checkErrors = ({ arg, inp, fn }) => {
+  if (fn(arg)) {
+    inp.classList.add("input__error");
+    return true;
+  }
+  inp.classList.remove("input__error");
+  return false;
 };
 
 const formatAPIUrl = (date, currency) => {
