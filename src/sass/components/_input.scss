@@ -6,5 +6,9 @@
   padding: 0.5em 1em;
   &__error {
     background-color: rgba(241, 28, 28, 0.5);
+    color: rgb(212, 196, 196);
+    &::placeholder {
+      color: rgb(212, 196, 196);
+    }
   }
 }
