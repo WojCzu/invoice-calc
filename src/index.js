@@ -97,12 +97,11 @@ const checkCurrencyErrors = currency => {
 };
 
 const checkErrors = ({ arg, inp, fn }) => {
-  if (fn(arg)) {
-    inp.classList.add("input__error");
-    return true;
-  }
-  inp.classList.remove("input__error");
-  return false;
+  const hasErrors = fn(arg);
+  hasErrors
+    ? inp.classList.add("input__error")
+    : inp.classList.remove("input__error");
+  return hasErrors;
 };
 
 const formatAPIUrl = (date, currency) => {
