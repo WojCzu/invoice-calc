@@ -25,9 +25,9 @@ const handleSubmit = e => {
   ].map(checkErrors);
 
   if (invalidFields.includes(true)) return;
-
   const formatedAPIUrl = formatAPIUrl(date, currency);
 
+  showLoader();
   fetch(formatedAPIUrl)
     .then(res => res.json())
     .then(({ code, rates }) => {
@@ -136,6 +136,14 @@ const showResult = (amount, { code, table, date, exchangeRate }) => {
   addMessage(`1 ${code} = ${exchangeRate} PLN`);
   addMessage(`TAB ${table} z dnia: ${date}`);
   addMessage(`${amount} ${code} = ${convertedAmount} PLN`);
+};
+
+const showLoader = () => {
+  const loader = document.createElement("div");
+  loader.classList.add("result__loader", "loader");
+
+  resultContainer.innerHTML = "";
+  resultContainer.appendChild(loader);
 };
 
 fetch("http://api.nbp.pl/api/exchangerates/tables/a/")
