@@ -24,7 +24,13 @@ const handleSubmit = e => {
     { fn: checkCurrencyErrors, arg: currency, inp: currencyInput },
   ].map(checkErrors);
 
-  if (invalidFields.includes(true)) return;
+  if (invalidFields.includes(true)) {
+    document.body.classList.add("error");
+    return;
+  } else {
+    document.body.classList.remove("error");
+  }
+
   const formatedAPIUrl = formatAPIUrl(date, currency);
 
   showLoader();

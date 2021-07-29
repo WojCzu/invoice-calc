@@ -4,6 +4,9 @@
   @include glass;
   box-sizing: border-box;
   padding: 0.5em 1em;
+  &::placeholder {
+    color: rgb(39, 39, 39);
+  }
   &__error {
     background-color: rgba(241, 28, 28, 0.5);
     color: rgb(212, 196, 196);

@@ -8,18 +8,21 @@
   border: 2px solid rgba(255, 255, 255, 0.5);
   z-index: -1;
   &--square {
-    width: clamp(500px, 70vw, 1500px);
-    height: clamp(500px, 70vw, 1500px);
+    width: clamp(500px, 80vw, 1800px);
+    height: clamp(500px, 80vw, 1800px);
     bottom: 0;
     left: 0;
     transform: translate(-50%, 20%) rotate(45deg);
   }
   &--circle {
-    width: clamp(200px, 35vw, 500px);
-    height: clamp(200px, 35vw, 500px);
+    width: clamp(200px, 40vw, 700px);
+    height: clamp(200px, 40vw, 700px);
     top: 0;
     left: 50%;
     border-radius: 50%;
     transform: translate(20%);
   }
+}
+.error .decoration {
+  background: linear-gradient(rgb(250, 95, 68) 0%, rgb(206, 69, 28) 100%);
 }
