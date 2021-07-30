@@ -1,6 +1,6 @@
 import "./sass/style.scss";
 
-const API_URL = "http://api.nbp.pl/api/exchangerates/rates";
+const API_URL = "https://api.nbp.pl/api/exchangerates";
 
 const appForm = document.querySelector(".app__form");
 const resultContainer = document.querySelector(".result");
@@ -117,7 +117,7 @@ const formatAPIUrl = (date, currency) => {
   previousDate(startingDate, 8);
   const formatStartingDate = formatDate(startingDate);
   const formatEndingDate = formatDate(endingDate);
-  return `${API_URL}/A/${currency}/${formatStartingDate}/${formatEndingDate}`;
+  return `${API_URL}/rates/A/${currency}/${formatStartingDate}/${formatEndingDate}`;
 };
 
 const previousDate = (date, days) => date.setDate(date.getDate() - days);
@@ -152,7 +152,7 @@ const showLoader = () => {
   resultContainer.appendChild(loader);
 };
 
-fetch("http://api.nbp.pl/api/exchangerates/tables/a/")
+fetch(`${API_URL}/tables/a/`)
   .then(res => res.json())
   .then(data =>
     data[0].rates.forEach(rate => possibleRates.push(rate.code.toUpperCase()))
