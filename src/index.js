@@ -1,4 +1,5 @@
 import "./sass/style.scss";
+import dayjs from "dayjs";
 
 const API_URL = "https://api.nbp.pl/api/exchangerates";
 
@@ -31,10 +32,8 @@ const handleSubmit = e => {
     document.body.classList.remove("error");
   }
 
-  const formatedAPIUrl = formatAPIUrl(date, currency);
-
   showLoader();
-  fetch(formatedAPIUrl)
+  fetch(getAPIUrl(date, currency))
     .then(res => res.json())
     .then(({ code, rates }) => {
       const {
@@ -67,16 +66,13 @@ const checkAmountErrors = amount => {
 
 const checkDateErrors = date => {
   let errors = false;
-
   if (!date) {
     addMessage("wprowadź datę");
     errors = true;
   } else if (!date.match(/\d{4}-\d{2}-\d{2}/)) {
     addMessage("zły format daty - wprowadź: RRRR-MM-DD");
     errors = true;
-  } else if (
-    new Date(date).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)
-  ) {
+  } else if (dayjs().diff(dayjs(date)) < 0) {
     addMessage("data nie może być z przyszłości");
     errors = true;
   }
@@ -110,18 +106,11 @@ const checkErrors = ({ arg, inp, fn }) => {
   return hasErrors;
 };
 
-const formatAPIUrl = (date, currency) => {
-  const startingDate = new Date(date);
-  const endingDate = new Date(date);
-  previousDate(endingDate, 1);
-  previousDate(startingDate, 8);
-  const formatStartingDate = formatDate(startingDate);
-  const formatEndingDate = formatDate(endingDate);
-  return `${API_URL}/rates/A/${currency}/${formatStartingDate}/${formatEndingDate}`;
+const getAPIUrl = (date, currency) => {
+  const startingDate = dayjs(date).subtract(8, "day").format("YYYY-MM-DD");
+  const endingDate = dayjs(date).subtract(1, "day").format("YYYY-MM-DD");
+  return `${API_URL}/rates/A/${currency}/${startingDate}/${endingDate}`;
 };
-
-const previousDate = (date, days) => date.setDate(date.getDate() - days);
-const formatDate = date => date.toISOString().split("T")[0];
 
 const showError = error => {
   resultContainer.innerHTML = "";
@@ -160,4 +149,4 @@ fetch(`${API_URL}/tables/a/`)
   .then(appForm.addEventListener("submit", handleSubmit))
   .catch(showError);
 
-dateInput.setAttribute("max", formatDate(new Date()));
+dateInput.setAttribute("max", dayjs().format("YYYY-MM-DD"));

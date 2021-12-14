@@ -33,6 +33,5 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({ template: "src/index.html" }),
     new MiniCssExtractPlugin({ filename: "style-[contenthash:8].css" }),
-    // new CopyPlugin({ patterns: [{ from: "public/images", to: "images" }] }),
   ],
 };
