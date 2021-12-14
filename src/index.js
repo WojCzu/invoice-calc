@@ -51,13 +51,13 @@ const checkAmountErrors = amount => {
   let errors = false;
 
   if (!amount) {
-    addMessage("wprowadź kwotę");
+    addMessage("Wprowadź kwotę.");
     errors = true;
   } else if (Number.isNaN(Number(amount))) {
-    addMessage("kwota musi być liczbą");
+    addMessage("Kwota musi być liczbą.");
     errors = true;
   } else if (Number(amount) <= 0) {
-    addMessage("kwota musi być większa od zera");
+    addMessage("Kwota musi być większa od zera.");
     errors = true;
   }
 
@@ -67,13 +67,13 @@ const checkAmountErrors = amount => {
 const checkDateErrors = date => {
   let errors = false;
   if (!date) {
-    addMessage("wprowadź datę");
+    addMessage("Wprowadź datę.");
     errors = true;
   } else if (!date.match(/\d{4}-\d{2}-\d{2}/)) {
-    addMessage("zły format daty - wprowadź: RRRR-MM-DD");
+    addMessage("Zły format daty. Upewnij się, że jest w formacie: RRRR-MM-DD.");
     errors = true;
   } else if (dayjs().diff(dayjs(date)) < 0) {
-    addMessage("data nie może być z przyszłości");
+    addMessage("Data nie może być z przyszłości.");
     errors = true;
   }
 
@@ -84,14 +84,14 @@ const checkCurrencyErrors = currency => {
   let errors = false;
 
   if (!currency) {
-    addMessage("wprowadź walutę");
+    addMessage("Wprowadź walutę.");
     errors = true;
   } else if (!currency.match(/^\w{3}$/i)) {
-    addMessage("zły format waluty - musi zawierać 3 znaki");
+    addMessage("Zły format waluty - musi zawierać 3 znaki.");
     errors = true;
   } else if (!possibleRates.includes(currency)) {
     addMessage(
-      `nie znaleziono takiej waluty ${currency}, upewnij się, że jest poprawna`
+      `Nie znaleziono waluty "${currency}". Upewnij się, że jest poprawna.`
     );
     errors = true;
   }
@@ -125,12 +125,28 @@ const addMessage = messageText => {
 };
 
 const showResult = (amount, { code, table, date, exchangeRate }) => {
-  const convertedAmount = +(Number(amount) * Number(exchangeRate)).toFixed(4);
+  const exchangeRateDecimalPlaces = exchangeRate
+    .toString()
+    .split(".")[1].length;
+  const amountDecimalPlaces = amount.toString().split(".")[1]?.length ?? 0;
+  const decimalPlaces = exchangeRateDecimalPlaces + amountDecimalPlaces;
 
+  const exchangeRateInt = BigInt(exchangeRate.toString().replace(".", ""));
+  const amountInt = BigInt(amount.toString().replace(".", ""));
+
+  const intResult = (exchangeRateInt * amountInt)
+    .toString()
+    .padStart(decimalPlaces + 1, "0");
+
+  const result = `${intResult.slice(0, -decimalPlaces)}.${intResult.slice(
+    -decimalPlaces
+  )}`;
   resultContainer.innerHTML = "";
   addMessage(`1 ${code} = ${exchangeRate} PLN`);
   addMessage(`TAB ${table} z dnia: ${date}`);
-  addMessage(`${amount} ${code} = ${convertedAmount} PLN`);
+  addMessage(
+    `${amount[0] === "." ? "0" + amount : amount} ${code} = ${result} PLN`
+  );
 };
 
 const showLoader = () => {
