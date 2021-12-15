@@ -1,34 +1,40 @@
-@use '../abstracts' as *;
+@use "../abstracts" as *;
 
 .app {
-  @include glass;
   box-sizing: border-box;
-  width: clamp(280px, 90vw, 360px);
-  color: white;
+  width: calc(100vw - 20px);
+  max-width: 420px;
+  padding: 5rem 3rem 2rem;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border-radius: 1.5rem;
+  color: $gray;
+  background: linear-gradient(
+    180deg,
+    $white 40%,
+    $white 40%,
+    darken($white, 2%) 100%
+  );
+  box-shadow: 3px 3px 5px rgba($light-gray, 0.35),
+    -5px -5px 5px rgba(white, 0.55);
 
   &__title {
-    padding: 3rem 2rem 0;
-    &::after {
-      content: "";
-      display: block;
-      width: 50%;
-      height: 2px;
-      background-color: #fff;
-      transform: translate(-0.5em, 0.1em);
-    }
+    margin: 0;
+    color: $light-gray;
   }
-  &__form {
-    padding: 1.5em 2rem;
-  }
-  &__result {
-    @include glass;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-top: 2px solid white;
-    box-shadow: none;
 
-    box-sizing: border-box;
+  @media screen and (max-width: 365px) {
     padding: 2rem;
-    width: 100%;
+  }
+  @media screen and (max-width: 330px) {
+    padding: 2rem 0.5rem;
+    &__title {
+      margin: 0 auto;
+    }
+    &__result {
+      margin: 0 10px;
+    }
   }
 }

@@ -5,9 +5,9 @@ const API_URL = "https://api.nbp.pl/api/exchangerates";
 
 const appForm = document.querySelector(".app__form");
 const resultContainer = document.querySelector(".result");
-const amountInput = appForm.querySelector(".form__input--amount");
-const dateInput = appForm.querySelector(".form__input--date");
-const currencyInput = appForm.querySelector(".form__input--currency");
+const amountInput = appForm.querySelector(".form_field__input--amount");
+const dateInput = appForm.querySelector(".form_field__input--date");
+const currencyInput = appForm.querySelector(".form_field__input--currency");
 
 const possibleRates = [];
 
@@ -101,8 +101,8 @@ const checkCurrencyErrors = currency => {
 const checkErrors = ({ arg, inp, fn }) => {
   const hasErrors = fn(arg);
   hasErrors
-    ? inp.classList.add("input__error")
-    : inp.classList.remove("input__error");
+    ? inp.parentElement.classList.add("form_field__error")
+    : inp.parentElement.classList.remove("form_field__error");
   return hasErrors;
 };
 
@@ -157,12 +157,15 @@ const showLoader = () => {
   resultContainer.appendChild(loader);
 };
 
-fetch(`${API_URL}/tables/a/`)
-  .then(res => res.json())
-  .then(data =>
-    data[0].rates.forEach(rate => possibleRates.push(rate.code.toUpperCase()))
-  )
-  .then(appForm.addEventListener("submit", handleSubmit))
-  .catch(showError);
+document.addEventListener("DOMContentLoaded", () => {
+  fetch(`${API_URL}/tables/a/`)
+    .then(res => res.json())
+    .then(data =>
+      data[0].rates.forEach(rate => possibleRates.push(rate.code.toUpperCase()))
+    )
+    .then(appForm.addEventListener("submit", handleSubmit))
+    .catch(showError);
 
-dateInput.setAttribute("max", dayjs().format("YYYY-MM-DD"));
+  dateInput.setAttribute("max", dayjs().format("YYYY-MM-DD"));
+  dateInput.setAttribute("value", dayjs().format("YYYY-MM-DD"));
+});

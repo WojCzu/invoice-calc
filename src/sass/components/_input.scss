@@ -1,17 +1,17 @@
-@use '../abstracts' as *;
+@use "../abstracts" as *;
 
 .input {
-  @include glass;
   box-sizing: border-box;
-  padding: 0.5em 1em;
+  border-radius: 1.5rem;
+  border: none;
+  padding: 0.6em 0.4em 0.6em 1em;
+  width: 100%;
+  background: $white;
+  box-shadow: inset 5px 5px 15px rgba($gray, 0.25),
+    inset -5px -5px 15px rgba(white, 0.65);
+
   &::placeholder {
-    color: rgb(39, 39, 39);
-  }
-  &__error {
-    background-color: rgba(241, 28, 28, 0.5);
-    color: rgb(212, 196, 196);
-    &::placeholder {
-      color: rgb(212, 196, 196);
-    }
+    color: $light-gray;
+    font-size: 0.7em;
   }
 }

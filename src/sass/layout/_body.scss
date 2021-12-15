@@ -1,5 +1,7 @@
+@use "../abstracts" as *;
+
 body {
-  background-color: #1f2120;
+  background-color: $white;
   margin: 0;
   padding: 0;
   min-height: 100vh;
